@@ -1,0 +1,220 @@
+\documentclass[a4paper,11pt]{article}
+
+%--- Base Packages -------------------------------------------------------------
+
+\usepackage[english]{babel}
+\usepackage[total={6.8in, 10.5in}, top=1cm]{geometry}
+\usepackage{ragged2e}
+
+%------------------------------------------------------------- Base Packages ---
+%--- Typography and Colors -----------------------------------------------------
+
+\usepackage{fontspec}
+\setmainfont[
+  BoldFont=Cormorant Garamond Bold,
+  ItalicFont=Cormorant Garamond Italic,
+  BoldItalicFont=Cormorant Garamond Bold Italic
+]{Cormorant Garamond}
+
+\usepackage{xcolor}
+\definecolor{highlight}{HTML}{283559}
+
+%----------------------------------------------------- Typography and Colors ---
+%--- Structure Formatting ------------------------------------------------------
+
+\usepackage{enumitem}
+\setlist[itemize]{
+  noitemsep,
+  topsep=2pt,
+  parsep=2pt,
+  partopsep=0pt,
+  leftmargin=15pt
+}
+
+\usepackage{titlesec}
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{\baselineskip}{1.5ex}
+
+\pagestyle{empty}
+
+\usepackage[
+  colorlinks=true,
+  linkcolor=highlight,
+  urlcolor=highlight,
+  citecolor=highlight
+]{hyperref}
+\usepackage{bookmark}
+
+%------------------------------------------------------ Structure Formatting ---
+%--- Custom Macros -------------------------------------------------------------
+
+\newcommand{\datedsubsection}[4]{%
+  \vspace{0.8ex}
+  \noindent\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r@{}}
+    \textbf{#3} & \scshape{#2} \\
+    \textit{#1} & \\
+  \end{tabular*}\par
+  \vspace{0.5ex}
+  \justifying\noindent
+  #4\par
+}
+
+% The phone number stays out of the public repository: phone.tex,
+% which git ignores, redefines \phone for local builds.
+\newcommand{\phone}{}
+\InputIfFileExists{phone.tex}{}{}
+
+%------------------------------------------------------------- Custom Macros ---
+
+\begin{document}
+
+%--- Header --------------------------------------------------------------------
+
+\begin{center}
+  {\Huge Thiago C. Silva} \\
+  \vspace*{0.2cm}
+  {\scshape Software Developer} \\
+  {Curvelo, MG, Brazil $\cdot$ librefos@newliber.com\phone} \\
+  {\href{https://linkedin.com/in/librefos}{linkedin.com/in/librefos} $\cdot$
+  \href{https://github.com/librefos}{github.com/librefos}}
+\end{center}
+
+%-------------------------------------------------------------------- Header ---
+%--- Professional Summary ------------------------------------------------------
+
+\section{Professional Summary}
+{\setlength{\parindent}{0pt}\setlength{\parskip}{0.5\baselineskip}
+Software developer focused on solving problems.  Before proposing a fix, I
+reproduce the problem and isolate the cause; then I validate each step with
+tests and document the causes and the reason behind each decision, so that
+future changes do not create new problems and the knowledge stays with the
+team, not just with me.
+
+I work on websites, systems, automations and servers.  I use the command line
+and POSIX systems every day, which makes me comfortable investigating failures
+and unexpected behavior right in the system.  My automations range from shell
+and Python scripts to harnesses and LLM agent orchestration.
+
+I support free software and contribute what adds value to the community.
+Always looking for challenges because the bigger the challenge, the greater the
+satisfaction and, in that cycle, the more I learn.\par}
+
+%------------------------------------------------------ Professional Summary ---
+%--- Professional Experience ---------------------------------------------------
+
+\section{Professional Experience}
+
+\datedsubsection{July 2025 -- Present}{Self-employed}%
+{Software Developer}{
+  \begin{itemize}
+    \item \textbf{Flow Digital}, a digital marketing agency (since May 2026):
+    the agency's only developer, responsible for the success of every client's
+    web presence.  I build, maintain and update the agency's and its clients'
+    websites, from creation to hosting.
+    \begin{itemize}
+      \item Built nine new websites to replace the old ones (four live, five
+      in review).  The four live sites get top marks in Google's quality and
+      speed reviews.
+      \item Set up automatic publishing for the sites: every change is tested
+      before it goes live.
+      \item Automated the agency's recurring tasks with artificial
+      intelligence: monthly reports, SEO and the content calendar.
+      \item Built spam-protected contact forms that send each lead straight
+      to the CRM.
+      \item Among the projects in progress, a system that creates and
+      publishes Instagram posts automatically: the core logic is in place,
+      and it still needs polishing and merging into the agency's main
+      automation.
+    \end{itemize}
+    \item \textbf{Paty Cosméticos}, a cosmetics shop: built its online store in
+    WordPress and WooCommerce, with payments through Mercado Pago.
+  \end{itemize}
+}
+
+\datedsubsection{November 2023 -- July 2025}{Flow Digital}%
+{Web Developer}{
+  \begin{itemize}
+    \item Looked after hosting for the sites of about twelve clients:
+    servers, databases and email; server migrations.
+    \item Built websites and landing pages, with a focus on SEO.
+  \end{itemize}
+}
+
+%--------------------------------------------------- Professional Experience ---
+%--- Personal Projects ---------------------------------------------------------
+
+\section{Personal Projects}
+\begin{itemize}
+  \item \textbf{Automated setup of my computers}
+  (\href{https://github.com/librefos/arch-bootstrap}{arch-bootstrap} and
+  \href{https://github.com/librefos/nixos-bootstrap}{nixos-bootstrap},
+  GPLv3): from scratch, out of a repository, with disk encryption and Secure
+  Boot.  Tests at three levels, including a virtual machine that runs the
+  whole install unattended.
+  \item \textbf{Isolated environment for AI agents}
+  (\href{https://github.com/librefos/corral}{corral}, GPLv3): a disposable,
+  unprivileged container for coding agents (Claude Code, Codex, opencode and
+  agy), with a read-only file system, encrypted backups and my own harness
+  that builds, updates and destroys the environment.
+  \item \textbf{CRM and customer service hub}
+  (\href{https://github.com/librefos/tcrm}{tcrm}, GPLv3): a CRM, support
+  chat, WhatsApp and n8n automations running together in Docker, behind a
+  reverse proxy, with one database per application.  The CRM is open to AI
+  agents through MCP.
+  \item \textbf{Self-hosted servers}: a Git server on my local network and a
+  virtual server, reached over VPN, with my own email on my domain (SPF, DKIM
+  and DMARC) and an always-on IRC connection.
+  \item \textbf{Living resume}
+  (\href{https://github.com/librefos/resume}{resume}, GPLv3): this resume is
+  a \LaTeX{} project, updated as my field and experience evolve, and
+  versioned in Git like every piece of software I write.  On each new
+  version, its own CI builds the Portuguese and English PDFs in a container
+  and publishes them for download.
+\end{itemize}
+
+%--------------------------------------------------------- Personal Projects ---
+%--- Open Source Contributions -------------------------------------------------
+
+\section{Open Source Contributions}
+\begin{itemize}
+  \item \href{https://patchwork.sourceware.org/project/binutils/list/?submitter=37677}%
+  {GNU Binutils}, the GNU project's tools used to build Linux: two fixes
+  accepted (2026).
+  \item \href{https://github.com/lichess-org/lila/pull/21832}{Lichess}, a
+  free and open source online chess server: one fix accepted (2026).
+\end{itemize}
+
+%------------------------------------------------- Open Source Contributions ---
+%--- Skills --------------------------------------------------------------------
+
+\section{Skills}
+\begin{itemize}
+  \item \textbf{Programming:} Shell, Python, JavaScript, TypeScript, PHP, Java,
+  C and C++.
+  \item \textbf{Web:} Astro, WordPress, SEO, GEO and integration through APIs
+  and MCP.
+  \item \textbf{Testing and CI/CD:} Vitest, Playwright, Lighthouse CI, Git and
+  GitHub Actions.
+  \item \textbf{Infrastructure:} Linux, VPS, shared hosting, Apache, Nginx,
+  Docker, Podman and Nix.
+  \item \textbf{Databases:} MySQL and PostgreSQL.
+  \item \textbf{Documentation:} \LaTeX{}, Texinfo and Typst.
+  \item \textbf{AI:} LLM agents (Claude Code, Codex, opencode, agy, pi) and
+  agent orchestration.
+  \item \textbf{Languages:} Portuguese (native), English (intermediate).
+\end{itemize}
+
+%-------------------------------------------------------------------- Skills ---
+%--- Education and Certifications ----------------------------------------------
+
+\section{Academic Education \& Certifications}
+\textbf{Bachelor of Software Engineering} $\cdot$ UniCesumar
+\hfill 2023 -- 2027 \\
+\textbf{Systems Development Technician} $\cdot$ Senac Minas
+\hfill 2023 -- 2024 \\
+\textbf{GitHub Foundations} $\cdot$ GitHub \hfill 2024 \\
+\textbf{Cybersecurity Essentials} $\cdot$ Linux Foundation \hfill 2024
+
+%---------------------------------------------- Education and Certifications ---
+
+\end{document}

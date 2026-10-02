@@ -1,0 +1,76 @@
+name: Build and Release LaTeX Resume
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Login to GHCR
+        run: >
+          echo "${{ secrets.GITHUB_TOKEN }}" |
+          docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull latest published image
+        run: docker pull "${IMAGE_NAME}:latest"
+
+      - name: Set PDF filenames from build date
+        run: |
+          BUILD_STAMP="$(date -u +'%Y%m%d-%H%M%S')"
+          echo "BUILD_STAMP=${BUILD_STAMP}" >> "$GITHUB_ENV"
+          echo "PDF_BR=build/resume-br-${BUILD_STAMP}.pdf" >> "$GITHUB_ENV"
+          echo "PDF_EN=build/resume-en-${BUILD_STAMP}.pdf" >> "$GITHUB_ENV"
+
+      - name: Compile LaTeX documents
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" \
+            -v "${{ github.workspace }}:/workspace" -w /workspace \
+            -e XDG_CACHE_HOME=/tmp/.cache "${IMAGE_NAME}:latest" sh -lc \
+            "mkdir -p build && \
+            xelatex -interaction=nonstopmode -halt-on-error  \
+                    -output-directory=build resume-br.tex && \
+            xelatex -interaction=nonstopmode -halt-on-error  \
+                    -output-directory=build resume-br.tex && \
+            xelatex -interaction=nonstopmode -halt-on-error  \
+                    -output-directory=build resume-en.tex && \
+            xelatex -interaction=nonstopmode -halt-on-error  \
+                    -output-directory=build resume-en.tex"
+          cp build/resume-br.pdf "${PDF_BR}"
+          cp build/resume-en.pdf "${PDF_EN}"
+
+      - name: Create or update GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -e
+          TITLE="Resume Build ${BUILD_STAMP} UTC"
+          NOTES="Auto-generated PDF build at ${BUILD_STAMP} UTC from tag ${TAG}"
+
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release edit "${TAG}" --title "${TITLE}" --notes "${NOTES}"
+            gh release upload "${TAG}" "${PDF_BR}" "${PDF_EN}" --clobber
+          else
+            gh release create "${TAG}" "${PDF_BR}" "${PDF_EN}" \
+               --title "${TITLE}" --notes "${NOTES}"
+          fi

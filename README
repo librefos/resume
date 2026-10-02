@@ -1,0 +1,63 @@
+Este repositório contém um currículo em LaTeX com build reproduzível.
+Os arquivos principais são resume-br.tex e resume-en.tex.
+Os PDFs finais são gerados em build/resume-br.pdf e build/resume-en.pdf.
+
+Arquivos principais
+
+resume-br.tex / resume-en.tex       guardam o conteúdo e o layout.
+build.sh                            script automatizado para compilar os PDFs em lote.
+Containerfile                       define a imagem com XeLaTeX e fontes Cormorant Garamond.
+compose.yaml                        executa o build completo dentro do container.
+.github/workflows/publish-image.yml publica a imagem no GHCR.
+.github/workflows/build.yml         compila os PDFs e cria release em push de tag.
+.gitignore                          ignora artefatos do LaTeX, a pasta build e o phone.tex.
+phone.tex                           (não versionado) telefone para os builds locais.
+
+Build local
+
+./build.sh
+
+O telefone fica fora do repositório público.  Para incluí-lo num build
+local, crie o phone.tex com uma linha:
+
+\renewcommand{\phone}{ $\cdot$ +55 (00) 00000-0000}
+
+Sem esse arquivo, os PDFs saem sem o telefone, como os publicados pela
+integração contínua.
+
+Build com container
+
+podman-compose run --rm resume-pdf
+
+--- English
+
+This repository contains a LaTeX resume with reproducible builds.
+The main source files are resume-br.tex and resume-en.tex.
+The final PDFs are generated at build/resume-br.pdf and build/resume-en.pdf.
+
+Main files
+
+resume-br.tex / resume-en.tex       stores content and layout.
+build.sh                            automated script to batch compile the PDFs.
+Containerfile                       defines the XeLaTeX image and Cormorant Garamond fonts.
+compose.yaml                        runs the full build flow inside the container.
+.github/workflows/publish-image.yml publishes the image to GHCR.
+.github/workflows/build.yml         compiles the PDFs and creates a release on tag push.
+.gitignore                          ignores LaTeX artifacts, the build directory and phone.tex.
+phone.tex                           (untracked) phone number for local builds.
+
+Local build
+
+./build.sh
+
+The phone number stays out of the public repository.  To include it in
+a local build, create phone.tex with one line:
+
+\renewcommand{\phone}{ $\cdot$ +55 (00) 00000-0000}
+
+Without that file the PDFs have no phone number, like the ones the CI
+publishes.
+
+Container build
+
+podman-compose run --rm resume-pdf

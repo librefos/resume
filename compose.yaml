@@ -1,0 +1,9 @@
+services:
+  resume-pdf:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: localhost/resume-texlive:latest
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
